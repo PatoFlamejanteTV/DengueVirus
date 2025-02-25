@@ -22,13 +22,13 @@ namespace DengueVirus
         public static void ErrorSounds()
         {
             Console.WriteLine("ErrorSounds");
-            int i = 0;
+            //int i = 0;
             for (; ; )
             {
-                if (i > 1000)
+                /*if (i > 1000)
                 {
                     i = 0;
-                }
+                }*/
                 int num = new Random().Next(2);
                 if (num != 0)
                 {
@@ -41,16 +41,61 @@ namespace DengueVirus
                 {
                     SystemSounds.Exclamation.Play();
                 }
-                Thread.Sleep(1000-i);
-                i+=10;
+                Thread.Sleep(400);
+                //Thread.Sleep(1000-i);
+                //i+=10;
             }
         }
-        
+        public static void ShakeMouse()
+        {
+            //gets mouse pointer and shakes in both x & y directions
+            Console.WriteLine("ShakeMouse");
+
+            // get cursor
+            Cursor c = new Cursor(Cursor.Current.Handle);
+
+            // change its xy pos
+            for (int i = 0; i < 100; i++)
+            {
+                Cursor.Position = new Point(
+                    Cursor.Position.X + i, 
+                    Cursor.Position.Y + i
+                    );
+
+                Thread.Sleep(100 - i);
+
+                Cursor.Position = new Point(
+                    Cursor.Position.X + i, 
+                    Cursor.Position.Y - i
+                    );
+
+                Thread.Sleep(100 - i);
+
+                Cursor.Position = new Point(
+                    Cursor.Position.X - i, 
+                    Cursor.Position.Y - i
+                    );
+
+                Thread.Sleep(100 - i);
+
+                Cursor.Position = new Point(
+                    Cursor.Position.X - i, 
+                    Cursor.Position.Y + i
+                    );
+
+                Thread.Sleep(100 - i);
+            }
+
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             Thread t = new Thread(ErrorSounds);t.Start();
-            Thread.Sleep(100000);
-            t.Abort();
+            Thread.Sleep(10000);
+
+            Thread t2 = new Thread(ShakeMouse); t2.Start();
+            Thread.Sleep(4000);
+            t2.Abort();
         }
     }
 }
