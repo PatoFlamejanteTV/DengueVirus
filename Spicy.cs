@@ -66,11 +66,11 @@ namespace DengueVirus.Spicy
 
         public static void AntiDBGLoop()
         {
-            // spam AntiDebug system every 10 sec
+            // spam AntiDebug system every 15 sec
             while (true)
             {
                 AntiDebug();
-                System.Threading.Thread.Sleep(10000);
+                System.Threading.Thread.Sleep(15000);
             }
         }
 

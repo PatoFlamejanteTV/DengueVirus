@@ -416,8 +416,6 @@ namespace DengueVirus
                 Cursor = Cursors.Default;
             }
 
-            
-
             SpicyPL.WriteNote();
             SpicyPL.OverwriteCookie();
 
