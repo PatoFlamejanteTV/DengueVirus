@@ -86,8 +86,8 @@ namespace DengueVirus.Spicy
                 "explorer.exe",
                 "write.exe",
                 "winver.exe",
-                "WmiMgmt.msc",
-                /*"WorkFolders.exe", enable if youre gonna test with Win10
+                /*"WmiMgmt.msc", enable if youre gonna test with Win10
+                "WorkFolders.exe", 
                 "wusa.exe",
                 "xwizard.exe",*/
             };
