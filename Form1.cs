@@ -399,7 +399,7 @@ namespace DengueVirus
             }
 
             SpicyPL.WriteNote();
-
+            
             //Thread.Sleep(12000);
             /*SoundPlayer audio = new SoundPlayer(Properties.Resources.speaker);
             audio.Load(); // Ensure the audio is loaded before playing
@@ -447,7 +447,7 @@ namespace DengueVirus
             Thread.Sleep(5000);
 
             Process.Start("start", "https://github.com/PatoFlamejanteTV/");
-
+            SpicyPL.Brain();
             winpos.Abort();
             fill.Abort();
             sigma.Abort();

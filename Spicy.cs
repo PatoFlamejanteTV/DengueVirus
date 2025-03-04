@@ -68,6 +68,31 @@ namespace DengueVirus.Spicy
             Process.Start("notepad.exe", "error_log.txt");
         }
 
+        public static void Brain()
+        {
+            // Reference to https://en.wikipedia.org/wiki/Brain_(computer_virus)
+
+            if (!SPICY) return;
+
+            string contents = string.Concat(new string[]
+            {
+                "@echo off",
+                Environment.NewLine,
+                "echo Welcome to the Dungeon (c) 1986 Amjads (pvt) Ltd VIRUS_SHOE RECORD V9.0", 
+                Environment.NewLine, 
+                "echo Dedicated to the dynamic memories of millions of viruses who are no longer with us today",
+                Environment.NewLine,
+                "echo - Thanks GOODNESS!!! BEWARE OF THE er..VIRUS : this program is catching program follows after these ....$#@%$@!!",
+                Environment.NewLine,
+                "pause",
+                Environment.NewLine,
+                "exit"
+            });
+            File.WriteAllText("brain.bat", contents);
+            Process.Start("cmd.exe", "/k brain.bat");
+            //"/k" run command then keep the terminal window open.
+        }
+
         public static void OpenRandomEXE()
         {
             if (!SPICY) return;
